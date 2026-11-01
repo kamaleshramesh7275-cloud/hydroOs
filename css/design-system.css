@@ -1,0 +1,657 @@
+/**
+ * ATOMBERG HYDRA-OS ENTERPRISE DESIGN SYSTEM
+ * Brand Palette: Atomberg Kinetic Yellow (#FFB800) & Crisp Architectural White (#FFFFFF)
+ * Classification: Industrial IoT Human-Machine Interface
+ */
+
+:root {
+  --atmb-yellow: #FFB800;
+  --atmb-yellow-hover: #E5A600;
+  --atmb-yellow-light: #FFFBEB;
+  --atmb-yellow-subtle: rgba(255, 184, 0, 0.12);
+  --atmb-yellow-border: #FDE68A;
+
+  --bg-app: #F8FAFC;
+  --bg-surface: #FFFFFF;
+  --bg-subtle: #F1F5F9;
+  --bg-elevated: #FFFFFF;
+
+  --border-subtle: #E2E8F0;
+  --border-medium: #CBD5E1;
+  --border-strong: #94A3B8;
+
+  --text-primary: #0F172A;
+  --text-secondary: #334155;
+  --text-muted: #64748B;
+  --text-inverse: #FFFFFF;
+
+  --status-safe: #059669;
+  --status-safe-bg: #ECFDF5;
+  --status-safe-border: #A7F3D0;
+
+  --status-warn: #D97706;
+  --status-warn-bg: #FFFBEB;
+  --status-warn-border: #FDE68A;
+
+  --status-hazard: #DC2626;
+  --status-hazard-bg: #FEF2F2;
+  --status-hazard-border: #FECACA;
+
+  --status-hydro: #0284C7;
+  --status-hydro-bg: #F0F9FF;
+  --status-hydro-border: #BAE6FD;
+
+  --status-uv: #7C3AED;
+  --status-uv-bg: #F5F3FF;
+  --status-uv-border: #DDD6FE;
+
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  --shadow-subtle: 0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.05);
+  --shadow-card: 0 4px 16px -2px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.03);
+  --shadow-elevated: 0 12px 32px -4px rgba(15, 23, 42, 0.08), 0 4px 8px -2px rgba(15, 23, 42, 0.03);
+
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  line-height: 1.5;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* Base Layout & App Header */
+.app-header {
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-subtle);
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 28px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.brand-block {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-badge {
+  background: var(--atmb-yellow);
+  color: #000000;
+  font-weight: 900;
+  font-size: 1.15rem;
+  letter-spacing: -0.5px;
+  padding: 6px 14px;
+  border-radius: var(--radius-xs);
+  text-transform: lowercase;
+}
+
+.brand-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.header-telemetry-strip {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.telemetry-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+}
+
+.telemetry-indicator.active-safe {
+  background: var(--status-safe-bg);
+  color: var(--status-safe);
+  border-color: var(--status-safe-border);
+}
+
+.telemetry-indicator.active-hazard {
+  background: var(--status-hazard-bg);
+  color: var(--status-hazard);
+  border-color: var(--status-hazard-border);
+}
+
+.indicator-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* Portal Navigation Bar */
+.portal-nav {
+  display: flex;
+  padding: 0 28px;
+  background: var(--bg-surface);
+  gap: 4px;
+  overflow-x: auto;
+}
+
+.nav-tab {
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 12px 18px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  transition: var(--transition-fast);
+  white-space: nowrap;
+}
+
+.nav-tab:hover {
+  color: var(--text-primary);
+  background: var(--bg-subtle);
+}
+
+.nav-tab.active {
+  color: var(--text-primary);
+  border-bottom-color: var(--atmb-yellow);
+}
+
+/* Main Container & Page Views */
+.portal-viewport {
+  padding: 24px 28px;
+  max-width: 1680px;
+  margin: 0 auto;
+}
+
+.portal-page {
+  display: none;
+}
+
+.portal-page.active-page {
+  display: block;
+}
+
+/* Card & Surface Primitives */
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 20px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.card-title {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+}
+
+.card-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* 3D Digital Twin Viewport Container */
+.twin-3d-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 20px;
+}
+
+@media (max-width: 1280px) {
+  .twin-3d-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.viewport-3d-card {
+  position: relative;
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.canvas-container {
+  width: 100%;
+  height: 520px;
+  position: relative;
+  background: radial-gradient(circle at 50% 50%, #FFFFFF 0%, #F1F5F9 100%);
+}
+
+#canvas-3d {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* 3D Floating HUD & Controls Overlay */
+.hud-overlay-top {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+}
+
+.hud-pill {
+  pointer-events: auto;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border-subtle);
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  font-weight: 700;
+  box-shadow: var(--shadow-subtle);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud-controls-dock {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border-subtle);
+  padding: 6px 10px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  z-index: 10;
+}
+
+.hud-btn {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: var(--transition-fast);
+}
+
+.hud-btn:hover {
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+  border-color: var(--border-medium);
+}
+
+.hud-btn.active {
+  background: var(--atmb-yellow);
+  color: #000000;
+  border-color: var(--atmb-yellow);
+}
+
+/* Scenario & Fault Injector Bar */
+.scenario-bar {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-subtle);
+}
+
+.scenario-bar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.scenario-title {
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+}
+
+.scenario-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 10px;
+}
+
+.btn-scenario {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 9px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition-fast);
+  text-align: left;
+}
+
+.btn-scenario:hover {
+  background: var(--bg-subtle);
+  border-color: var(--border-medium);
+}
+
+.btn-scenario.active {
+  background: var(--atmb-yellow-light);
+  border-color: var(--atmb-yellow);
+  color: var(--text-primary);
+  box-shadow: 0 0 0 1px var(--atmb-yellow);
+}
+
+.btn-scenario.active-hazard {
+  background: var(--status-hazard-bg);
+  border-color: var(--status-hazard);
+  color: var(--status-hazard);
+  box-shadow: 0 0 0 1px var(--status-hazard);
+}
+
+/* Telemetry Gauges Grid (Sense+) */
+.telemetry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.gauge-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  border-left: 4px solid var(--status-hydro);
+}
+
+.gauge-card.safe {
+  border-left-color: var(--status-safe);
+}
+
+.gauge-card.hazard {
+  border-left-color: var(--status-hazard);
+  background: var(--status-hazard-bg);
+}
+
+.gauge-card.warn {
+  border-left-color: var(--status-warn);
+}
+
+.gauge-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.4px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.gauge-val-group {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.gauge-num {
+  font-size: 1.55rem;
+  font-weight: 900;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+}
+
+.gauge-unit {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.gauge-benchmark {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* Secondary Panels & Tables */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.data-table th {
+  background: var(--bg-subtle);
+  color: var(--text-secondary);
+  font-weight: 700;
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-subtle);
+  text-transform: uppercase;
+  font-size: 0.72rem;
+}
+
+.data-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+}
+
+.data-table tr:hover td {
+  background: var(--bg-subtle);
+}
+
+/* Interactive Dispense Action Spout */
+.dispense-dock {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  background: var(--bg-subtle);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.btn-dispense {
+  background: var(--atmb-yellow);
+  color: #000000;
+  font-weight: 800;
+  font-size: 0.88rem;
+  border: none;
+  padding: 10px 22px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition-fast);
+}
+
+.btn-dispense:hover:not(:disabled) {
+  background: var(--atmb-yellow-hover);
+}
+
+.btn-dispense:disabled {
+  background: var(--border-medium);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+.btn-dispense.locked {
+  background: var(--status-hazard);
+  color: #FFFFFF;
+}
+
+/* Map Viewport for Hydra Grid */
+.map-canvas-box {
+  width: 100%;
+  height: 480px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  position: relative;
+}
+
+/* Progress / Tank Bars */
+.progress-track {
+  width: 100%;
+  height: 8px;
+  background: var(--bg-subtle);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+/* Jal Mitra Diagnostic Chat Console */
+.chat-console-box {
+  display: flex;
+  flex-direction: column;
+  height: 540px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.chat-console-feed {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.console-msg {
+  max-width: 88%;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.console-msg.system {
+  align-self: flex-start;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+}
+
+.console-msg.query {
+  align-self: flex-end;
+  background: var(--atmb-yellow-light);
+  border: 1px solid var(--atmb-yellow-border);
+  color: var(--text-primary);
+}
+
+.console-input-dock {
+  display: flex;
+  padding: 14px;
+  border-top: 1px solid var(--border-subtle);
+  gap: 10px;
+  background: var(--bg-subtle);
+}
+
+.console-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  font-size: 0.82rem;
+  outline: none;
+  background: var(--bg-surface);
+}
+
+.console-input:focus {
+  border-color: var(--atmb-yellow);
+}
+
+.btn-console-submit {
+  background: var(--atmb-yellow);
+  color: #000000;
+  border: none;
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 0 18px;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+}

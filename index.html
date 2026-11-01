@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atomberg HydraOS 2.0 — Cyber-Physical Water Safety Platform</title>
+  
+  <!-- Typography & Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap">
+  
+  <!-- Leaflet Map CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+  <!-- Atomberg Enterprise Design System CSS -->
+  <link rel="stylesheet" href="css/design-system.css">
+</head>
+<body>
+
+  <!-- Enterprise Application Header -->
+  <header class="app-header">
+    <div class="header-top">
+      <div class="brand-block">
+        <div class="brand-badge">atomberg</div>
+        <div>
+          <div class="brand-title">
+            HydraOS 2.0
+            <span style="font-size:0.7rem; font-weight:700; background:#F1F5F9; border:1px solid #CBD5E1; padding:2px 6px; border-radius:3px; color:#475569;">ENTERPRISE HMI</span>
+          </div>
+          <div class="brand-subtitle">Cyber-Physical Water Safety Platform & Distributed Sensor Grid • PIN 560038</div>
+        </div>
+      </div>
+
+      <div class="header-telemetry-strip">
+        <div id="header-status-indicator" class="telemetry-indicator active-safe">
+          <span class="indicator-dot"></span>
+          <span id="header-status-text">TAP SAFE & DISPENSING</span>
+        </div>
+        <div class="telemetry-indicator">
+          <span>Potable Safety Index:</span>
+          <span id="header-safety-score" style="font-weight:900; font-family:var(--font-mono); color:#059669;">96</span>
+          <span style="font-size:0.7rem; color:var(--text-muted);">/100</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5-Portal Navigation Dock -->
+    <nav class="portal-nav">
+      <button class="nav-tab active" data-portal="portal-twin">
+        3D Digital Twin & Physics
+      </button>
+      <button class="nav-tab" data-portal="portal-grid">
+        Hydra Grid & Water Forecast
+      </button>
+      <button class="nav-tab" data-portal="portal-hydration">
+        Family Hydration & Zero-Reject
+      </button>
+      <button class="nav-tab" data-portal="portal-fleet">
+        Enterprise Fleet & Maintenance
+      </button>
+      <button class="nav-tab" data-portal="portal-console">
+        Jal Mitra Technical Console
+      </button>
+    </nav>
+  </header>
+
+  <!-- Industrial Scenario & Chaos Fault Injector Strip -->
+  <div style="padding: 16px 28px 0 28px; max-width: 1680px; margin: 0 auto;">
+    <div class="scenario-bar">
+      <div class="scenario-bar-header">
+        <span class="scenario-title">Cyber-Physical Industrial Scenario Injection Bench</span>
+        <span style="font-size:0.72rem; color:var(--text-muted);">Simulate raw hydrodynamic events to verify sub-second algorithmic response</span>
+      </div>
+      <div class="scenario-actions-grid">
+        <button id="btn-scen-nominal" class="btn-scenario active">
+          Municipal River Supply (Eco Bypass)
+        </button>
+        <button id="btn-scen-rupture" class="btn-scenario">
+          Main Pipe Rupture (Mud Infiltration)
+        </button>
+        <button id="btn-scen-tanker" class="btn-scenario">
+          High-Salinity Tanker (Full RO)
+        </button>
+        <button id="btn-scen-fouling" class="btn-scenario">
+          Membrane Fouling (Self-Healing)
+        </button>
+        <button id="btn-scen-leak" class="btn-scenario">
+          Night-Time Pipe Micro-Leakage
+        </button>
+        <button id="btn-scen-outage" class="btn-scenario">
+          Grid Power Interruption (Twin)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Primary Viewport Container -->
+  <main class="portal-viewport">
+
+    <!-- ========================================================================= -->
+    <!-- PORTAL 1: 3D CYBER-PHYSICAL DIGITAL TWIN & CORE INSTRUMENTATION -->
+    <!-- ========================================================================= -->
+    <section id="portal-twin" class="portal-page active-page">
+      <div class="twin-3d-layout">
+
+        <!-- Left Column: WebGL 3D Canvas, Dispense Controls & MCSA Virtual Sensor -->
+        <div style="display:flex; flex-direction:column; gap:18px;">
+          
+          <div class="viewport-3d-card">
+            <!-- Top HUD Overlay -->
+            <div class="hud-overlay-top">
+              <div class="hud-pill">
+                <span class="indicator-dot" style="background:#0284C7;"></span>
+                <span id="hud-operational-mode">MUNICIPAL ECO BYPASS (RO INACTIVE)</span>
+              </div>
+              <div class="hud-pill" style="font-family:var(--font-mono); font-size:0.72rem;">
+                <span>CLICK 3D PARTS TO INSPECT</span>
+                <span style="color:#CBD5E1;">|</span>
+                <span id="hud-physics-step">ODE: 10 HZ</span>
+              </div>
+            </div>
+
+            <!-- 3D Canvas Viewport -->
+            <div id="canvas-container" class="canvas-container">
+              <!-- Three.js Canvas injected dynamically here -->
+            </div>
+
+            <!-- Floating 3D Control Dock -->
+            <div class="hud-controls-dock">
+              <button id="btn-view-default" class="hud-btn active">Assembled</button>
+              <button id="btn-view-cutaway" class="hud-btn">Manifold Cutaway</button>
+              <button id="btn-view-explode" class="hud-btn">Exploded View</button>
+              <button id="btn-reset-cam" class="hud-btn">Reset Camera</button>
+            </div>
+
+            <!-- Bottom Dispense Action Dock -->
+            <div class="dispense-dock">
+              <div>
+                <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; color:var(--text-muted);">
+                  Solenoid 2 (Interlock Tap)
+                </div>
+                <div id="interlock-status-label" style="font-size:0.92rem; font-weight:800; color:var(--status-safe);">
+                  UNLOCKED (RESPONSE LATENCY < 400 MS)
+                </div>
+              </div>
+
+              <button id="btn-dispense-glass" class="btn-dispense">
+                Dispense Aliquot (250 ml)
+              </button>
+            </div>
+          </div>
+
+          <!-- INNOVATION 1: MCSA Virtual Sensor (Motor Current Signature Analysis) -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <span class="card-title">Innovation 1: MCSA Virtual Sensor (Motor-as-a-Sensor)</span>
+                <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">
+                  Analyzes BLDC inverter phase currents (Iq) via FFT to detect pump cavitation without fluid-contact sensors
+                </div>
+              </div>
+              <div style="display:flex; gap:6px;">
+                <button class="btn-scenario active btn-mcsa-mode" data-mode="NOMINAL" style="font-size:0.72rem; padding:4px 8px;">Nominal</button>
+                <button class="btn-scenario btn-mcsa-mode" data-mode="CAVITATION" style="font-size:0.72rem; padding:4px 8px;">Cavitation</button>
+                <button class="btn-scenario btn-mcsa-mode" data-mode="AIRLOCK" style="font-size:0.72rem; padding:4px 8px;">Air Lock</button>
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 220px; gap:16px; align-items:center;">
+              <canvas id="canvas-mcsa-spectrum" width="520" height="130" style="width:100%; height:130px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:4px;"></canvas>
+              
+              <div style="font-size:0.78rem; display:flex; flex-direction:column; gap:8px;">
+                <div>Stator Current RMS: <strong id="mcsa-current-rms" style="font-family:var(--font-mono); color:#0F172A;">1.75 A</strong></div>
+                <div>Blade Pass Freq (BPF): <strong style="font-family:var(--font-mono); color:#0284C7;">185.0 Hz</strong></div>
+                <div>Cavitation Index: <strong id="mcsa-cavitation-idx" style="font-family:var(--font-mono); color:#059669;">0.04 (Normal)</strong></div>
+                <div style="font-size:0.7rem; color:var(--text-muted); line-height:1.4;">
+                  Harmonic sidebands indicate zero mechanical cavitation. Motor bearings operating in laminar fluid regime.
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Sense+, SUVA Spectral, DNA & Actuators -->
+        <div style="display:flex; flex-direction:column; gap:18px;">
+
+          <!-- Manual Sensor Tuning Sliders Box -->
+          <div class="card" style="padding:14px 18px;">
+            <div class="card-header" style="margin-bottom:10px; padding-bottom:8px;">
+              <span class="card-title" style="font-size:0.8rem;">Manual Sensor Override Sliders</span>
+              <span style="font-size:0.7rem; color:var(--text-muted);">Engineer Calibration</span>
+            </div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; font-size:0.75rem;">
+              <div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+                  <span>Inlet TDS:</span>
+                  <strong id="slider-val-tds" style="font-family:var(--font-mono);">110 ppm</strong>
+                </div>
+                <input type="range" id="slider-inlet-tds" min="20" max="1200" value="110" style="width:100%; accent-color:var(--atmb-yellow);">
+              </div>
+              <div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+                  <span>Turbidity:</span>
+                  <strong id="slider-val-turb" style="font-family:var(--font-mono);">0.35 NTU</strong>
+                </div>
+                <input type="range" id="slider-turbidity" min="0.1" max="25.0" step="0.1" value="0.35" style="width:100%; accent-color:var(--status-hazard);">
+              </div>
+            </div>
+          </div>
+
+          <!-- Sense+ 6-Parameter Transducers & INNOVATION 6: SUVA Spectral Index -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Sense+ Transducer Array</span>
+              <span class="card-subtitle">Real-time Telemetry</span>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+              <!-- Inlet TDS -->
+              <div class="gauge-card" id="card-inlet-tds">
+                <div class="gauge-label">
+                  <span>Inlet TDS</span>
+                  <span>Conductivity</span>
+                </div>
+                <div class="gauge-val-group">
+                  <span id="val-inlet-tds" class="gauge-num">110</span>
+                  <span class="gauge-unit">ppm</span>
+                </div>
+                <div class="gauge-benchmark">Municipal raw supply</div>
+              </div>
+
+              <!-- Output TDS -->
+              <div class="gauge-card safe" id="card-outlet-tds">
+                <div class="gauge-label">
+                  <span>Output TDS</span>
+                  <span>Tuned</span>
+                </div>
+                <div class="gauge-val-group">
+                  <span id="val-outlet-tds" class="gauge-num" style="color:var(--status-safe);">85</span>
+                  <span class="gauge-unit">ppm</span>
+                </div>
+                <div class="gauge-benchmark">Target: 80 - 100 ppm</div>
+              </div>
+
+              <!-- Turbidity -->
+              <div class="gauge-card safe" id="card-turbidity">
+                <div class="gauge-label">
+                  <span>Turbidity</span>
+                  <span>Optical</span>
+                </div>
+                <div class="gauge-val-group">
+                  <span id="val-turbidity" class="gauge-num">0.35</span>
+                  <span class="gauge-unit">NTU</span>
+                </div>
+                <div class="gauge-benchmark">Compliant (< 1.0 NTU)</div>
+              </div>
+
+              <!-- pH Level -->
+              <div class="gauge-card safe" id="card-ph">
+                <div class="gauge-label">
+                  <span>pH Balance</span>
+                  <span>Glass BNC</span>
+                </div>
+                <div class="gauge-val-group">
+                  <span id="val-ph" class="gauge-num">7.4</span>
+                  <span class="gauge-unit">pH</span>
+                </div>
+                <div class="gauge-benchmark">Target: 7.2 - 7.8</div>
+              </div>
+
+              <!-- ORP / Chlorine -->
+              <div class="gauge-card safe" id="card-orp">
+                <div class="gauge-label">
+                  <span>Redox / ORP</span>
+                  <span>Potentiometric</span>
+                </div>
+                <div class="gauge-val-group">
+                  <span id="val-orp" class="gauge-num">420</span>
+                  <span class="gauge-unit">mV</span>
+                </div>
+                <div class="gauge-benchmark">Disinfection active</div>
+              </div>
+
+              <!-- INNOVATION 6: Optical SUVA Index -->
+              <div class="gauge-card safe" id="card-suva">
+                <div class="gauge-label">
+                  <span>SUVA Index</span>
+                  <span>UV-254 / DOC</span>
+                </div>
+                <div class="gauge-val-group">
+                  <span id="val-suva" class="gauge-num" style="color:#7C3AED;">1.88</span>
+                  <span class="gauge-unit">L/mg·m</span>
+                </div>
+                <div class="gauge-benchmark" id="suva-thm-label">THM Risk: LOW (< 2.0)</div>
+              </div>
+            </div>
+
+            <!-- Chemical Smart Strips Diagnostics -->
+            <div style="margin-top:14px; padding-top:12px; border-top:1px solid var(--border-subtle);">
+              <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;">
+                Chemical Strip Optical Diagnostics
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:0.78rem;">
+                <div>Lead (Pb): <span style="font-weight:800; color:var(--status-safe); font-family:var(--font-mono);">< 0.005 mg/L</span></div>
+                <div>Nitrate (NO3): <span style="font-weight:800; color:var(--status-safe); font-family:var(--font-mono);">12 mg/L</span></div>
+                <div>Fluoride (F): <span style="font-weight:800; color:var(--status-safe); font-family:var(--font-mono);">0.6 mg/L</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Water DNA Fingerprint Classifier -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Water DNA Contaminant Classifier</span>
+              <span id="dna-confidence-pill" style="font-size:0.72rem; font-weight:700; color:#0284C7; font-family:var(--font-mono);">98% MATCH</span>
+            </div>
+            <div id="dna-classification-label" style="font-size:0.95rem; font-weight:800; color:var(--text-primary); margin-bottom:6px;">
+              Municipal Surface Supply (Cauvery Basin)
+            </div>
+            <p id="dna-classification-desc" style="font-size:0.78rem; color:var(--text-muted); line-height:1.5;">
+              Multi-variate pattern matching confirms clean municipal river water. Guided action: Bypass RO stage to preserve magnesium and eliminate water wastage.
+            </p>
+          </div>
+
+          <!-- Actuator Mechanical States & Dynamic UV-C -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Actuator & Hardware States</span>
+              <span class="card-subtitle">Subsystem Diagnostic</span>
+            </div>
+            <div style="font-size:0.8rem; display:flex; flex-direction:column; gap:8px;">
+              <div style="display:flex; justify-content:space-between;">
+                <span style="color:var(--text-muted);">Atomberg BLDC Booster Pump:</span>
+                <span id="actuator-bldc-val" style="font-weight:700; font-family:var(--font-mono);">0 RPM (4 Watts)</span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span style="color:var(--text-muted);">Solenoid 1 (RO Diverter Valve):</span>
+                <span id="actuator-diverter-val" style="font-weight:700; color:#0284C7;">CLOSED (UF Bypass Engaged)</span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span style="color:var(--text-muted);">UV-C LED Dynamic Irradiance:</span>
+                <span id="actuator-uv-val" style="font-weight:700; color:#7C3AED;">18.0 mJ/cm² (SUVA Low Dosing)</span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span style="color:var(--text-muted);">Zero-Reject Return Valve:</span>
+                <span style="font-weight:700;">STANDBY</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Slide-in 3D Component Inspector Modal -->
+      <div id="component-inspector-modal" style="display:none; position:fixed; top:80px; right:30px; width:360px; background:#FFFFFF; border:1px solid #CBD5E1; border-radius:10px; box-shadow:0 12px 32px rgba(15,23,42,0.15); z-index:999; padding:20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #E2E8F0; padding-bottom:10px; margin-bottom:12px;">
+          <span style="font-size:0.82rem; font-weight:800; text-transform:uppercase; color:#0F172A;">Component Inspector</span>
+          <button id="btn-close-inspector" style="background:none; border:none; font-weight:800; cursor:pointer; color:#64748B;">✕</button>
+        </div>
+        <div id="inspector-content">
+          <!-- Populated dynamically via raycasting -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- PORTAL 2: HYDRA GRID & WATER FORECAST -->
+    <!-- ========================================================================= -->
+    <section id="portal-grid" class="portal-page">
+      <div style="display:grid; grid-template-columns: 1fr 380px; gap:20px;">
+        
+        <!-- Left: Neighborhood Cartography with INNOVATION 3: GNN Source Attribution -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <span class="card-title">Hydra Grid Distributed Sensor Network</span>
+              <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">
+                Sector HAL 2nd Stage, Indiranagar, Bengaluru • 15 Connected Nodes
+              </div>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button id="btn-toggle-gnn-pipeline" style="background:#0F172A; color:#FFF; border:none; font-size:0.75rem; font-weight:700; padding:5px 12px; border-radius:4px; cursor:pointer;">
+                Innovation 3: Toggle GNN Pipeline Map
+              </button>
+            </div>
+          </div>
+
+          <div id="grid-status-alert" style="padding:10px 14px; border-radius:4px; font-size:0.78rem; font-weight:700; margin-bottom:14px; background:#F0F9FF; border:1px solid #BAE6FD; color:#0284C7;">
+            Sector Water Main Status: 9/9 reporting units within compliant municipal baseline.
+          </div>
+
+          <!-- Interactive Node Inspector Box -->
+          <div id="grid-node-inspector" style="display:none; padding:12px; background:#F8FAFC; border:1px solid #CBD5E1; border-radius:6px; margin-bottom:12px;"></div>
+
+          <div id="hydra-map-canvas" class="map-canvas-box"></div>
+
+          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; margin-top:14px;">
+            <div style="padding:10px; background:var(--bg-subtle); border-radius:4px;">
+              <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Spatial Consensus Rule</div>
+              <div style="font-size:1.1rem; font-weight:900; font-family:var(--font-mono); margin-top:4px;">N ≥ 3 Nodes</div>
+              <div style="font-size:0.7rem; color:var(--text-muted);">Eliminates single-unit false alarms</div>
+            </div>
+            <div style="padding:10px; background:var(--bg-subtle); border-radius:4px;">
+              <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Verified Safe Points</div>
+              <div id="grid-safe-points-count" style="font-size:1.1rem; font-weight:900; font-family:var(--font-mono); color:#0284C7; margin-top:4px;">3 Ready</div>
+              <div style="font-size:0.7rem; color:var(--text-muted);">Societies with verified reserves</div>
+            </div>
+            <div style="padding:10px; background:var(--bg-subtle); border-radius:4px;">
+              <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Nearest Safe Walking Path</div>
+              <div style="font-size:1.1rem; font-weight:900; font-family:var(--font-mono); margin-top:4px;">180 Meters</div>
+              <div style="font-size:0.7rem; color:var(--text-muted);">Dr. Nair Medical Annex (60L)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Tap Water Forecast & INNOVATION 4: Zero-Knowledge Privacy -->
+        <div style="display:flex; flex-direction:column; gap:18px;">
+          
+          <!-- Tap Water Quality Forecast -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Tap Water Forecast</span>
+              <span class="card-subtitle">Predictive Modeling</span>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Time Horizon</th>
+                  <th>Source</th>
+                  <th>Turb.</th>
+                  <th>TDS</th>
+                  <th>Risk</th>
+                  <th>System Action</th>
+                </tr>
+              </thead>
+              <tbody id="forecast-table-body">
+                <!-- Injected via WaterForecastModule -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- INNOVATION 4: Zero-Knowledge Privacy Guard (zk-SNARKs & LDP) -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Innovation 4: Zero-Knowledge Privacy</span>
+              <span style="font-size:0.72rem; font-weight:700; color:#059669;">zk-SNARK VERIFIED</span>
+            </div>
+            <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:10px;">
+              Local Differential Privacy (ε=0.5) injects calibrated Laplace noise into volume telemetry, concealing household occupancy.
+            </p>
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; padding:10px; border-radius:4px; font-size:0.75rem; font-family:var(--font-mono); line-height:1.6; margin-bottom:10px;">
+              <div>Proof Hash: <strong style="color:#0284C7;" id="zkp-hash-display">0x8f2a91b4c0e3</strong></div>
+              <div>Commitment: <strong id="zkp-commit-display">zk-commit-4821</strong></div>
+              <div>Privacy Budget: <strong>ε = 0.5 (Laplace LDP)</strong></div>
+            </div>
+            <button id="btn-generate-zkp" style="width:100%; background:#FFF; border:1px solid #CBD5E1; font-weight:700; font-size:0.75rem; padding:6px; border-radius:4px; cursor:pointer;">
+              Generate New zk-Proof
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- PORTAL 3: FAMILY HYDRATION & ZERO-REJECT CIRCULARITY -->
+    <!-- ========================================================================= -->
+    <section id="portal-hydration" class="portal-page">
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+        
+        <!-- Left: Demographic Remineralization & Custom Profiles -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Demographic Hydration Profiles</span>
+            <span class="card-subtitle">Non-Medical Remineralization</span>
+          </div>
+
+          <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:14px;">
+            Controls active electrolytic dosing to tailor mineral content for household members without medical claims.
+          </p>
+
+          <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:10px; margin-bottom:16px;">
+            <button class="btn-scenario active" data-profile="STANDARD">
+              Standard Adult (Balanced)
+            </button>
+            <button class="btn-scenario" data-profile="SENIOR">
+              Senior Care (Cardio/Skeletal)
+            </button>
+            <button class="btn-scenario" data-profile="ATHLETE">
+              Athletic Recovery (Electrolytes)
+            </button>
+            <button class="btn-scenario" data-profile="INFANT">
+              Infant Nutrition (Pediatric)
+            </button>
+          </div>
+
+          <div style="padding:14px; background:var(--bg-subtle); border-radius:var(--radius-sm); border:1px solid var(--border-subtle); margin-bottom:16px;">
+            <div style="font-size:0.85rem; font-weight:800; margin-bottom:8px;" id="profile-detail-name">
+              Standard Adult (Balanced)
+            </div>
+            <div style="font-size:0.78rem; color:var(--text-secondary); line-height:1.5; margin-bottom:10px;" id="profile-detail-purpose">
+              Everyday cellular hydration and balanced taste profile.
+            </div>
+            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; font-size:0.75rem;">
+              <div>Target TDS: <strong id="profile-detail-tds" style="font-family:var(--font-mono);">85 ppm</strong></div>
+              <div>Calcium (Ca): <strong id="profile-detail-ca" style="font-family:var(--font-mono);">30 mg/L</strong></div>
+              <div>Magnesium (Mg): <strong id="profile-detail-mg" style="font-family:var(--font-mono);">15 mg/L</strong></div>
+            </div>
+          </div>
+
+          <!-- Custom Profile Builder Form -->
+          <div style="padding:14px; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:6px;">
+            <div style="font-size:0.78rem; font-weight:800; text-transform:uppercase; margin-bottom:8px; color:#0F172A;">
+              Create Custom Calibration Profile
+            </div>
+            <form id="form-custom-profile" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:0.75rem;">
+              <input type="text" id="cust-prof-name" placeholder="Profile Label (e.g. Morning Tea)" required style="padding:6px; border:1px solid #CBD5E1; border-radius:3px;">
+              <input type="number" id="cust-prof-tds" placeholder="Target TDS (40-180)" required style="padding:6px; border:1px solid #CBD5E1; border-radius:3px;">
+              <input type="number" id="cust-prof-ca" placeholder="Calcium mg/L (10-50)" required style="padding:6px; border:1px solid #CBD5E1; border-radius:3px;">
+              <input type="number" id="cust-prof-mg" placeholder="Magnesium mg/L (5-45)" required style="padding:6px; border:1px solid #CBD5E1; border-radius:3px;">
+              <button type="submit" style="grid-column: span 2; background:#FFB800; color:#000; border:none; font-weight:800; padding:8px; border-radius:4px; cursor:pointer;">
+                Save & Calibrate Profile
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Right: Daily Intake & INNOVATION 5: Energy-Water Nexus (Solar Peak Pumping) -->
+        <div style="display:flex; flex-direction:column; gap:18px;">
+          
+          <!-- INNOVATION 5: Dynamic Energy-Water Nexus -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <span class="card-title">Innovation 5: Energy-Water Nexus Optimizer</span>
+                <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">
+                  Synchronizes high-pressure RO cycles with rooftop solar generation and ToD electricity tariffs
+                </div>
+              </div>
+              <div style="display:flex; gap:6px;">
+                <button class="btn-scenario btn-energy-mode" data-mode="GRID_STANDARD" style="font-size:0.72rem; padding:4px 8px;">Flat Grid</button>
+                <button class="btn-scenario active btn-energy-mode" data-mode="SOLAR_SYNC" style="font-size:0.72rem; padding:4px 8px;">Solar Sync</button>
+              </div>
+            </div>
+
+            <canvas id="chart-energy-nexus" width="540" height="130" style="width:100%; height:130px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:4px; margin-bottom:10px;"></canvas>
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.78rem;">
+              <div>Monthly Electrical Cost: <strong id="energy-cost-display" style="font-family:var(--font-mono); color:#059669;">₹24 / month</strong></div>
+              <div>Solar Share: <strong id="energy-share-display" style="color:#FFB800;">88% Solar-Powered</strong></div>
+            </div>
+          </div>
+
+          <!-- Zero-Reject Utility Distribution Actions -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Zero-Reject Circular Utility Circuit</span>
+              <span class="card-subtitle">Under 10% Net Loss</span>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:6px;">
+              <span style="font-weight:700;">Zero-Reject Utility Storage (6L Reuse Tank)</span>
+              <span id="hyd-reuse-tank-vol" style="font-weight:800; font-family:var(--font-mono); color:#D97706;">3.4 / 6.0 L</span>
+            </div>
+            <div class="progress-track" style="margin-bottom:10px;">
+              <div id="hyd-reuse-tank-fill" class="progress-fill" style="width:56%; background:#D97706;"></div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px;">
+              <button class="btn-utilize-reject" data-purpose="Balcony Horticulture" data-vol="1.5" style="background:#FFF; border:1px solid #CBD5E1; font-size:0.72rem; font-weight:700; padding:8px 4px; border-radius:4px; cursor:pointer;">
+                Plants (1.5L)
+              </button>
+              <button class="btn-utilize-reject" data-purpose="Floor Sanitation" data-vol="2.0" style="background:#FFF; border:1px solid #CBD5E1; font-size:0.72rem; font-weight:700; padding:8px 4px; border-radius:4px; cursor:pointer;">
+                Mopping (2.0L)
+              </button>
+              <button class="btn-utilize-reject" data-purpose="Cistern Flush" data-vol="3.0" style="background:#FFF; border:1px solid #CBD5E1; font-size:0.72rem; font-weight:700; padding:8px 4px; border-radius:4px; cursor:pointer;">
+                Flush (3.0L)
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- PORTAL 4: ENTERPRISE FLEET & RWA DASHBOARD -->
+    <!-- ========================================================================= -->
+    <section id="portal-fleet" class="portal-page">
+      <div style="display:grid; grid-template-columns: 1.2fr 0.8fr; gap:20px;">
+        
+        <!-- Left: Filter SKUs & INNOVATION 2: PINN Hydrodynamic Digital Twin -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <span class="card-title">Filter Health & Component SKU Ledger</span>
+              <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">
+                Algorithmic degradation tracking based on mass solids exposure rather than calendar days
+              </div>
+            </div>
+            <button id="btn-manual-reverse-flush" style="background:var(--bg-subtle); border:1px solid var(--border-subtle); font-size:0.75rem; font-weight:700; padding:6px 12px; border-radius:4px; cursor:pointer;">
+              Trigger Reverse-Flush Cycle
+            </button>
+          </div>
+
+          <table class="data-table" style="margin-bottom:18px;">
+            <thead>
+              <tr>
+                <th>Part SKU Number</th>
+                <th>Component Description</th>
+                <th>Calculated Health</th>
+                <th>Projected Lifespan</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="sku-table-body">
+              <!-- Injected via FleetManagementModule -->
+            </tbody>
+          </table>
+
+          <!-- INNOVATION 2: Physics-Informed (PINN) Resistance-in-Series Membrane Decomposition -->
+          <div style="border-top:1px solid var(--border-subtle); padding-top:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="font-size:0.78rem; font-weight:800; text-transform:uppercase; color:#0F172A;">
+                Innovation 2: PINN Resistance-in-Series Decomposition (RIS Model)
+              </span>
+              <span style="font-size:0.72rem; font-family:var(--font-mono); color:#059669;">Loss: 8.4e-5</span>
+            </div>
+            <canvas id="chart-pinn-resistance" width="600" height="150" style="width:100%; height:150px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:6px;"></canvas>
+          </div>
+        </div>
+
+        <!-- Right: RWA Community Quality Heatmap -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">RWA & Municipal Network Heatmap</span>
+            <span class="card-subtitle">Sector Overview</span>
+          </div>
+
+          <table class="data-table" style="margin-bottom:18px;">
+            <thead>
+              <tr>
+                <th>Building Block</th>
+                <th>Fleet Units</th>
+                <th>Mean TDS</th>
+                <th>Mean Turb.</th>
+                <th>Compliance</th>
+              </tr>
+            </thead>
+            <tbody id="rwa-table-body">
+              <!-- Injected via FleetManagementModule -->
+            </tbody>
+          </table>
+
+          <button id="btn-generate-work-order" style="width:100%; background:#0F172A; color:#FFF; font-weight:800; font-size:0.8rem; padding:10px; border:none; border-radius:4px; cursor:pointer;">
+            Generate Field Technician Work-Order Ticket
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Service Work-Order Ticket Modal -->
+      <div id="work-order-modal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width:480px; background:#FFFFFF; border:1px solid #CBD5E1; border-radius:8px; box-shadow:0 20px 45px rgba(15,23,42,0.2); z-index:1000; padding:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #FFB800; padding-bottom:8px; margin-bottom:14px;">
+          <strong style="font-size:0.95rem; text-transform:uppercase;">Atomberg Authorized Field Work-Order</strong>
+          <button id="btn-close-wo" style="background:none; border:none; font-weight:800; cursor:pointer;">✕</button>
+        </div>
+        <div id="wo-ticket-content" style="font-size:0.82rem; line-height:1.6; color:#334155;"></div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- PORTAL 5: JAL MITRA TECHNICAL DIAGNOSTIC CONSOLE -->
+    <!-- ========================================================================= -->
+    <section id="portal-console" class="portal-page">
+      <div style="max-width:960px; margin:0 auto;">
+        
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <span class="card-title">Jal Mitra Technical Knowledge & Diagnostics Console</span>
+              <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">
+                Context-aware diagnostic consultation for water purity, compliance and interlock auditing
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <button id="btn-mic-input" style="padding:6px 12px; font-size:0.75rem; font-weight:700; border:1px solid var(--border-subtle); border-radius:4px; background:var(--bg-surface); cursor:pointer;">
+                Voice Input
+              </button>
+              <select id="console-lang-select" style="padding:6px 12px; font-size:0.75rem; font-weight:700; border:1px solid var(--border-subtle); border-radius:4px; background:var(--bg-surface);">
+                <option value="en">English (Technical)</option>
+                <option value="hi">हिंदी (Hindi Technical)</option>
+                <option value="ta">தமிழ் (Tamil Technical)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Quick Query Buttons -->
+          <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;">
+            <button class="btn-scenario quick-query-btn" data-query="Analyze current potable water safety index for neonatal formula preparation." style="font-size:0.75rem;">
+              Pediatric & Infant Safety Compliance
+            </button>
+            <button class="btn-scenario quick-query-btn" data-query="Explain the mechanical and sensor threshold triggering the active interlock shutdown." style="font-size:0.75rem;">
+              Root-Cause Interlock Audit
+            </button>
+            <button class="btn-scenario quick-query-btn" data-query="Calculate total domestic water conserved across the preceding cycles." style="font-size:0.75rem;">
+              ESG Zero-Reject Resource Accounting
+            </button>
+            <button class="btn-scenario quick-query-btn" data-query="System telemetry summary." style="font-size:0.75rem;">
+              Full System Telemetry Audit
+            </button>
+          </div>
+
+          <div class="chat-console-box">
+            <div id="console-feed" class="chat-console-feed">
+              <div class="console-msg system">
+                JAL MITRA KERNEL READY: System operational. Continuous monitoring active across 6 transducers. Click 'Voice Input' or type your technical diagnostic inquiry.
+              </div>
+            </div>
+            <form id="console-form" class="console-input-dock">
+              <input type="text" id="console-input" class="console-input" placeholder="Enter technical inquiry regarding water chemistry, filter lifecycle or interlocks..." autocomplete="off">
+              <button type="submit" class="btn-console-submit">Transmit</button>
+            </form>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- External Library Dependencies -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- HydraOS Cyber-Physical Kernel -->
+  <script src="js/engine/audio-engine.js"></script>
+  <script src="js/engine/mcsa-sensor.js"></script>
+  <script src="js/engine/suva-spectral.js"></script>
+  <script src="js/simulation-engine.js"></script>
+  <script src="js/three/scene-manager.js"></script>
+  <script src="js/three/chassis-model.js"></script>
+  <script src="js/modules/water-forecast.js"></script>
+  <script src="js/modules/gnn-attribution.js"></script>
+  <script src="js/modules/zkp-privacy.js"></script>
+  <script src="js/modules/energy-nexus.js"></script>
+  <script src="js/modules/pinn-digital-twin.js"></script>
+  <script src="js/modules/family-hydration.js"></script>
+  <script src="js/modules/fleet-management.js"></script>
+  <script src="js/modules/jal-mitra-console.js"></script>
+  <script src="js/hydra-grid.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
