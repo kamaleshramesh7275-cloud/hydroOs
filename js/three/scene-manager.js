@@ -38,14 +38,17 @@ class HydraSceneManager {
 
   initScene() {
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0xF8FAFC);
+    this.scene.background = new THREE.Color(0x070B14);
 
-    const aspect = this.container.clientWidth / this.container.clientHeight;
+    const width = this.container.clientWidth || 720;
+    const height = this.container.clientHeight || 450;
+    const aspect = width / height;
+
     this.camera = new THREE.PerspectiveCamera(40, aspect, 0.1, 100);
     this.camera.position.set(2.8, 1.8, 3.4);
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
-    this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+    this.renderer.setSize(width, height);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -60,7 +63,7 @@ class HydraSceneManager {
     const ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.75);
     this.scene.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(0xFFFFFF, 0.85);
+    const keyLight = new THREE.DirectionalLight(0x00E5FF, 0.85);
     keyLight.position.set(5, 8, 5);
     keyLight.castShadow = true;
     keyLight.shadow.mapSize.width = 1024;
@@ -74,12 +77,12 @@ class HydraSceneManager {
     fillLight.position.set(-4, 3, -2);
     this.scene.add(fillLight);
 
-    const accentLight = new THREE.PointLight(0xFFB800, 0.35, 10);
+    const accentLight = new THREE.PointLight(0x00E5FF, 0.45, 10);
     accentLight.position.set(0, -1, 3);
     this.scene.add(accentLight);
 
     const shadowPlaneGeo = new THREE.PlaneGeometry(12, 12);
-    const shadowPlaneMat = new THREE.ShadowMaterial({ opacity: 0.08 });
+    const shadowPlaneMat = new THREE.ShadowMaterial({ opacity: 0.15 });
     const shadowPlane = new THREE.Mesh(shadowPlaneGeo, shadowPlaneMat);
     shadowPlane.rotation.x = -Math.PI / 2;
     shadowPlane.position.y = -1.25;
@@ -102,6 +105,20 @@ class HydraSceneManager {
   initRaycasting() {
     if (!this.renderer || !this.renderer.domElement) return;
 
+    const findInspectableData = (intersects) => {
+      for (let hit of intersects) {
+        const obj = hit.object;
+        if (!obj) continue;
+        if (obj.userData && (obj.userData.isInspectable || obj.userData.isHotspot)) {
+          return obj.userData;
+        }
+        if (obj.parent && obj.parent.userData && (obj.parent.userData.isInspectable || obj.parent.userData.isHotspot)) {
+          return obj.parent.userData;
+        }
+      }
+      return null;
+    };
+
     this.renderer.domElement.addEventListener('click', (event) => {
       const rect = this.renderer.domElement.getBoundingClientRect();
       this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
@@ -109,15 +126,21 @@ class HydraSceneManager {
 
       this.raycaster.setFromCamera(this.mouse, this.camera);
       const intersects = this.raycaster.intersectObjects(this.scene.children, true);
-
-      for (let hit of intersects) {
-        if (hit.object && hit.object.userData && hit.object.userData.isInspectable) {
-          if (this.onComponentClickCallback) {
-            this.onComponentClickCallback(hit.object.userData);
-          }
-          break;
-        }
+      const data = findInspectableData(intersects);
+      if (data && this.onComponentClickCallback) {
+        this.onComponentClickCallback(data);
       }
+    });
+
+    this.renderer.domElement.addEventListener('mousemove', (event) => {
+      const rect = this.renderer.domElement.getBoundingClientRect();
+      this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+      this.raycaster.setFromCamera(this.mouse, this.camera);
+      const intersects = this.raycaster.intersectObjects(this.scene.children, true);
+      const data = findInspectableData(intersects);
+      this.renderer.domElement.style.cursor = data ? 'pointer' : 'default';
     });
   }
 
@@ -125,15 +148,28 @@ class HydraSceneManager {
     this.onComponentClickCallback = cb;
   }
 
+  setContainer(newContainer) {
+    if (!newContainer || !this.renderer) return;
+    this.container = typeof newContainer === 'string' ? document.getElementById(newContainer) : newContainer;
+    if (this.container && this.renderer.domElement) {
+      this.container.appendChild(this.renderer.domElement);
+      this.resize();
+    }
+  }
+
   setupResizeListener() {
     window.addEventListener('resize', () => {
-      if (!this.container || !this.camera || !this.renderer) return;
-      const width = this.container.clientWidth;
-      const height = this.container.clientHeight;
-      this.camera.aspect = width / height;
-      this.camera.updateProjectionMatrix();
-      this.renderer.setSize(width, height);
+      this.resize();
     });
+  }
+
+  resize() {
+    if (!this.container || !this.camera || !this.renderer) return;
+    const width = this.container.clientWidth || 720;
+    const height = this.container.clientHeight || 450;
+    this.camera.aspect = width / height;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(width, height);
   }
 
   setViewMode(mode) {

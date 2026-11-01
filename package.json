@@ -1,0 +1,23 @@
+{
+  "name": "hydroos",
+  "version": "2.0.0",
+  "description": "Atomberg HydraOS 2.0 - Advanced Smart RO Water Purifier Platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Ready\" && exit 0"
+  },
+  "keywords": [
+    "water-purifier",
+    "smart-ro",
+    "iot",
+    "digital-twin",
+    "predictive-maintenance",
+    "tds-monitoring"
+  ],
+  "author": "Atomberg Technologies",
+  "license": "ISC",
+  "dependencies": {
+    "three": "^0.187.0"
+  }
+}
